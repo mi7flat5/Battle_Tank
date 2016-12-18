@@ -4,49 +4,23 @@
 #include "TankAIController.h"
 #include "Tank.h"
 
-
-ATank * ATankAIController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
-
-ATank * ATankAIController::getPlayerTank() const
-{
-	return Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-}
-
 void ATankAIController::aimAtPlayer()
 {
-	
-	if (GetControlledTank())
-	{
-		FVector playerLoc = getPlayerTank()->GetActorLocation();
-		GetControlledTank()->aimAt(playerLoc);
-	}
+		FVector playerLoc = playerTank->GetActorLocation();
+		controlledTank->aimAt(playerLoc);
 }
-
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	
-		ATank* tmp = GetControlledTank();
-
-	if (tmp)
-	{
-		FString tankName = tmp->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("AI Possessd Tank name is %s"), *tankName)
-	}
-	
-	ATank* PlayerTank = getPlayerTank();
-	if (PlayerTank)
-	{
-		FString tankName = PlayerTank->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("Player Possessd Tank name (from AI) is %s"), *tankName)
-	}
+	controlledTank = Cast<ATank>(GetPawn());
+	playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
 }
-
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	aimAtPlayer();
+	if (controlledTank && playerTank)
+	{
+		aimAtPlayer();
+		controlledTank->fireTank();
+	}
 }

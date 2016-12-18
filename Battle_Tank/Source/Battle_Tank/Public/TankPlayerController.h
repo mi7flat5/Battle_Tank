@@ -25,13 +25,13 @@ public:
 		void aimTowardsCrosshair();
 
 		/** What is the Player's current musical skill level? */
-		UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 			float crosshairXLocation = 0.5f;
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 			float crosshairYLocation = 0.33333f;
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 			float lineTraceRange = 1000000;
 private:
 	
