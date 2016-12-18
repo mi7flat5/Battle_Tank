@@ -37,10 +37,16 @@ void ATank::aimAt(FVector hitLoc) const
 
 void ATank::setBarrellReference(UTankBarrel* inBarrel)
 {
+	verifyf(inBarrel, TEXT("nullpter reference for Barrel"));
 	tankAimingComponent->setBarrel(inBarrel);
 }
 
 void ATank::setTurretReference(UTankTurret* inTurret)
 {
+	verifyf(inTurret, TEXT("nullpter reference for turret"));
 	tankAimingComponent->setTurret(inTurret);
+}
+void ATank::fireTank() 
+{
+	UE_LOG(LogTemp,Warning,TEXT("Tank Fired!"))
 }

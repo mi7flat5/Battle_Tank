@@ -35,8 +35,10 @@ public:
 	void setTurretReference(UTankTurret* inTurret);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-		float fireingVelocity = 8000;
+	float fireingVelocity = 4000;
 	
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	void fireTank();
 
 protected:
 	UTankAimingCompnent* tankAimingComponent = nullptr;
