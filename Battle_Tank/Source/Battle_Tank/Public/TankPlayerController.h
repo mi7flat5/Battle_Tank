@@ -2,9 +2,11 @@
 
 #pragma once
 
-#include"Tank.h"
+
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
+
+class ATank;
 
 /**
  * 
@@ -18,7 +20,7 @@ public:
 		virtual void BeginPlay()override;
 		
 		//if bugs, try Tick() method
-		virtual void PlayerTick(float DeltaTime)override;
+		virtual void Tick(float DeltaTime)override;
 		
 		void aimTowardsCrosshair();
 
@@ -36,7 +38,7 @@ private:
 		
 		bool GetSightRayHitLocation(FVector&)const;
 
-		bool getLookvectorHitLocation(FVector & lookAt, FHitResult & hit)const;
+		bool getLookvectorHitLocation(FVector & lookAt, FVector& location)const;
 
 		bool getLookDirection(FVector2D , FVector & )const;
 	

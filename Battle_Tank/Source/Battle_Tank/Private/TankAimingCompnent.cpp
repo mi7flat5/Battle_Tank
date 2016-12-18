@@ -3,6 +3,7 @@
 #include "Battle_Tank.h"
 #include "TankAimingCompnent.h"
 #include"TankBarrel.h"
+#include "TankTurret.h"
 
 // Sets default values for this component's properties
 UTankAimingCompnent::UTankAimingCompnent()
@@ -30,6 +31,11 @@ void UTankAimingCompnent::setBarrel(UTankBarrel* inBarrel)
 }
 
 
+void UTankAimingCompnent::setTurret(UTankTurret* inTurret)
+{
+	turret = inTurret;
+}
+
 // Called every frame
 void UTankAimingCompnent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
@@ -38,31 +44,35 @@ void UTankAimingCompnent::TickComponent( float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UTankAimingCompnent::aimAt(FVector aimLoc,float fireingVelocity) const
+void UTankAimingCompnent::aimAt(FVector aimLoc,float fireingVelocity)
 {
 	if (!barrel) { return; }
-	FString FtoS = FString::SanitizeFloat(fireingVelocity);
+	
 	
 
-	const FCollisionResponseParams blahb;
-	const TArray<AActor*> blah;
+	
 
 	FVector	tossVelocity;
-	if (UGameplayStatics::SuggestProjectileVelocity(
+
+	if (UGameplayStatics::SuggestProjectileVelocity   (
 			this,
 			tossVelocity,
 			barrel->GetSocketLocation(FName("BarrelEnd")),
 			aimLoc,
 			fireingVelocity,
-			ESuggestProjVelocityTraceOption::DoNotTrace
-			)
+			false,
+			0,
+			0,
+			ESuggestProjVelocityTraceOption::DoNotTrace)
 		)
 	{
-		FVector aimDir = tossVelocity.GetSafeNormal();
-		//UE_LOG(LogTemp, Warning, TEXT("Aiming direction is: %s"), *aimDir.ToString())
-			
+		aimDir = tossVelocity.GetSafeNormal();
+	
+		
 		moveBarrel(aimDir);
+		
 	}
+	
 }
 void UTankAimingCompnent::moveBarrel(FVector dir) const
 {
@@ -71,6 +81,14 @@ void UTankAimingCompnent::moveBarrel(FVector dir) const
 	auto deltaRotator = aimRotator - barrelRotator;
 	
 
-	barrel->elevate(5);
+	barrel->elevate(deltaRotator.Pitch);
 	
+	if (FMath::Abs(deltaRotator.Yaw) < 180)
+	{
+		turret->rotate(deltaRotator.Yaw);
+	}
+	else
+	{
+		turret->rotate(-deltaRotator.Yaw);
+	}
 }

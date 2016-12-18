@@ -4,8 +4,9 @@
 
 #include "Components/ActorComponent.h"
 #include "TankAimingCompnent.generated.h"
-class UTankBarrel;
 
+class UTankBarrel;
+class UTankTurret;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLE_TANK_API UTankAimingCompnent : public UActorComponent
 {
@@ -18,13 +19,16 @@ public:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	void setBarrel(UTankBarrel*);
-	void aimAt(FVector, float)const;
+	void setTurret(UTankTurret* inTurret);
+	void aimAt(FVector,float);
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 	
+	
 private:
 	UTankBarrel* barrel;
-		
+	UTankTurret* turret;
+	FVector aimDir;
 	
 	void moveBarrel(FVector dir)const;
 };
