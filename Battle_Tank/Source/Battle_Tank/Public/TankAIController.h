@@ -21,7 +21,10 @@ class BATTLE_TANK_API ATankAIController : public AAIController
 		virtual void BeginPlay()override;
 		virtual void Tick(float DeltaTime)override;
 		
+		UPROPERTY(EditDefaultsOnly,Category = "AI Control")
+			float acceptanceRadius = 300;
+		
 		void aimAtPlayer();
-
+		
 	
 };

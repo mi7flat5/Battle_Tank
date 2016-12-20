@@ -8,24 +8,38 @@
 
 void UTankMovementComponent::intendMoveForward(float controlThrow)
 {
-	
-
-	//TODO fix double speed if stick and triggers used together
-	leftTrack->setThrottle(controlThrow);
-	rightTrack->setThrottle(controlThrow);
+	if (leftTrack && rightTrack)
+	{
+		//TODO fix double speed if stick and triggers used together
+		leftTrack->setThrottle(controlThrow);
+		rightTrack->setThrottle(controlThrow);
+	}
 }
 
 void UTankMovementComponent::intendTurnRight(float controlThrow)
 {
-	leftTrack->setThrottle(controlThrow);
-	rightTrack->setThrottle(-controlThrow);
+	if (leftTrack && rightTrack)
+	{
+		leftTrack->setThrottle(controlThrow);
+		rightTrack->setThrottle(-controlThrow);
+		auto tankName = GetOwner()->GetName();
+		
+	}
+}
+
+void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
+{
+	
+	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
+	auto tankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	intendMoveForward(FVector::DotProduct(tankForward,AIForwardIntention ));
+
+	intendTurnRight(FVector::CrossProduct(tankForward,AIForwardIntention ).Z);
+	
 }
 
 void UTankMovementComponent::initialize(UTankTrack* inLeftTrack, UTankTrack* inRightTrack)
 {
-	if (inLeftTrack && inRightTrack)
-	{
 		leftTrack = inLeftTrack;
 		rightTrack = inRightTrack;
-	}
 }
