@@ -6,15 +6,18 @@
 #include "Tank.generated.h"
 
 class UTankAimingCompnent;
+class UTankMovementComponent;
 class UTankBarrel;
 class AProjectile;
+class UTankTrack;
+
 UCLASS()
 class BATTLE_TANK_API ATank : public APawn
 {
 	GENERATED_BODY()
 
 	UTankBarrel* barrel;
-	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 	
 
@@ -34,14 +37,16 @@ public:
 	ATank();
 	void aimAt(FVector)const;
 
-	UFUNCTION(BlueprintCallable, Category = Set)
+	UFUNCTION(BlueprintCallable, Category = Setup)
 		void setBarrellReference(UTankBarrel* inBarrel);
 
-	UFUNCTION(BlueprintCallable, Category = Set)
+	UFUNCTION(BlueprintCallable, Category = Setup)
 		void setTurretReference(UTankTurret* inTurret);
 	
 	UFUNCTION(BlueprintCallable, Category = Firing)
 		void fireTank();
 protected:
 	UTankAimingCompnent* tankAimingComponent = nullptr;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Setup)
+	//UTankMovementComponent* tankMovementComponent = nullptr;
 };
