@@ -6,8 +6,11 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
-class ATank;
 
+
+
+class ATank;
+class UTankAimingCompnent;
 /**
  * 
  */
@@ -16,30 +19,39 @@ class BATTLE_TANK_API ATankPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
-		ATank* GetControlledTank()const;
+	
 		virtual void BeginPlay()override;
 		
 		//if bugs, try Tick() method
 		virtual void Tick(float DeltaTime)override;
 		
 		void aimTowardsCrosshair();
-
-		/** What is the Player's current musical skill level? */
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-			float crosshairXLocation = 0.5f;
-
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-			float crosshairYLocation = 0.33333f;
-
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-			float lineTraceRange = 1000000;
+	
 private:
 	
-		
 		bool GetSightRayHitLocation(FVector&)const;
 
 		bool getLookvectorHitLocation(FVector & lookAt, FVector& location)const;
 
 		bool getLookDirection(FVector2D , FVector & )const;
+		UTankAimingCompnent * aim;
+		ATank* owner;
+	
+protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		float crosshairXLocation = 0.5f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		float crosshairYLocation = 0.33333f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		float lineTraceRange = 1000000;
+		
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+		void aimingComponentFound(UTankAimingCompnent* aimReference);
+		
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		ATank* GetControlledTank()const;
 	
 };

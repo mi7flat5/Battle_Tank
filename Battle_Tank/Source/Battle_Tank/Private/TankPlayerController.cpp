@@ -2,6 +2,7 @@
 
 #include "Battle_Tank.h"
 #include "TankPlayerController.h"
+#include"TankAimingCompnent.h"
 #include"Tank.h"
 
 ATank * ATankPlayerController::GetControlledTank() const
@@ -14,10 +15,14 @@ void ATankPlayerController::BeginPlay()
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("PlayerController begin play."))
 	
-	ATank* tmp = GetControlledTank();
-	if (tmp) 
+	owner = GetControlledTank();
+	if (owner) 
 	{
-		FString tankName = tmp->GetName();
+		aim = owner->FindComponentByClass<UTankAimingCompnent>();
+		if(aim)
+		aimingComponentFound(aim);
+		else UE_LOG(LogTemp, Warning, TEXT("No Aiming component found in TankPlayerController Begin Play"))
+		FString tankName = owner->GetName();
 		UE_LOG(LogTemp,Warning, TEXT("TankPossessd name is %s"),*tankName)
 	}
 }
@@ -35,9 +40,9 @@ void ATankPlayerController::aimTowardsCrosshair()
 	FVector hitLocation;
 	if (GetSightRayHitLocation(hitLocation))
 	{
-		GetControlledTank()->aimAt(hitLocation);
+		aim->aimAt(hitLocation);
 	}
-	else GetControlledTank()->aimAt(hitLocation);//TODO figure out why the course tank does this, may be changed in later videos.
+	else aim->aimAt(hitLocation);//TODO figure out why the course tank does this, may be changed in later videos.
 		
 	
 }
@@ -64,7 +69,7 @@ bool ATankPlayerController::getLookvectorHitLocation(FVector& lookAt, FVector &l
 	FHitResult hit;
 	FVector startLoc = PlayerCameraManager->GetCameraLocation();
 	FVector endLoc = startLoc + lookAt*lineTraceRange;
-	if (GetWorld()->LineTraceSingleByChannel(hit, startLoc, endLoc, ECollisionChannel::ECC_Camera))
+	if (GetWorld()->LineTraceSingleByChannel(hit, startLoc, endLoc, ECollisionChannel::ECC_Visibility))
 	{
 		location = hit.Location;
 		return true;

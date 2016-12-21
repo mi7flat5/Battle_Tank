@@ -13,7 +13,7 @@ void UTankTrack::setThrottle(float throttle)
 	auto forceApplied = GetForwardVector()* throttle* trackMaxDrivingForce;
 	
 	auto tankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	forceApplied.Z = 0;
+	//forceApplied.Z = 0;
 
 	auto forceLocation = GetSocketLocation(FName("Hitch"));
 	auto tankRotation = tankRoot->GetComponentRotation();

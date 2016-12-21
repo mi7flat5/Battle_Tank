@@ -4,8 +4,6 @@
 #include "TankMovementComponent.h"
 #include "TankTrack.h"
 
-
-
 void UTankMovementComponent::intendMoveForward(float controlThrow)
 {
 	if (leftTrack && rightTrack)
@@ -23,19 +21,17 @@ void UTankMovementComponent::intendTurnRight(float controlThrow)
 		leftTrack->setThrottle(controlThrow);
 		rightTrack->setThrottle(-controlThrow);
 		auto tankName = GetOwner()->GetName();
-		
 	}
 }
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	
 	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
 	auto tankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
 	intendMoveForward(FVector::DotProduct(tankForward,AIForwardIntention ));
-
-	intendTurnRight(FVector::CrossProduct(tankForward,AIForwardIntention ).Z);
-	
+		
+	float mag = FVector::CrossProduct(tankForward, AIForwardIntention).Z;
+	intendTurnRight(mag);
 }
 
 void UTankMovementComponent::initialize(UTankTrack* inLeftTrack, UTankTrack* inRightTrack)

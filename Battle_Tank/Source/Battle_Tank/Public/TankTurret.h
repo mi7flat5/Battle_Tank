@@ -18,8 +18,5 @@ class BATTLE_TANK_API UTankTurret : public UStaticMeshComponent
 
 public:
 	void rotate(float inRotation);
-	
-	
-	
-	
+
 };

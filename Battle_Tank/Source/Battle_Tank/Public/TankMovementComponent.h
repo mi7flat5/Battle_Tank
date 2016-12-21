@@ -12,27 +12,21 @@ UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLE_TANK_API UTankMovementComponent : public UNavMovementComponent
 {
 	GENERATED_BODY()
-	
-	
+		
 	UTankTrack* leftTrack = nullptr;
 	UTankTrack* rightTrack = nullptr;
 
-
+	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)override;
 	
-
 public:
-		UFUNCTION(BlueprintCallable, Category = Input)
-		void intendMoveForward(float controlThrow);
+
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void intendMoveForward(float controlThrow);
 		
-		UFUNCTION(BlueprintCallable, Category = Input)
-			void intendTurnRight(float controlThrow);
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void intendTurnRight(float controlThrow);
 		
-		virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)override;
-		
-		UFUNCTION(BlueprintCallable, Category = Setup)
-		void initialize(UTankTrack * inLeftTrack, UTankTrack * inRightTrack);
-	
-	
-		
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void initialize(UTankTrack * inLeftTrack, UTankTrack * inRightTrack);
 
 };
