@@ -23,7 +23,7 @@ class BATTLE_TANK_API UTankAimingCompnent : public UActorComponent
 
 public:	
 	// Sets default values for this component's properties
-	//UTankAimingCompnent();
+	UTankAimingCompnent();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -45,14 +45,18 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void initialize(UTankBarrel * inBarrel, UTankTurret * inTurret);
-
 	
-	
+	EFireingState GetFiringState()const { return fireingState; }
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "State")
-		EFireingState fireingState = EFireingState::LOCKED;
+		EFireingState fireingState = EFireingState::AIMING;
 	
 private:
+
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)override;
+
+	bool barrelIsMoving() const;
+
 	UTankBarrel* barrel;
 	UTankTurret* turret;
 	FVector aimDir;

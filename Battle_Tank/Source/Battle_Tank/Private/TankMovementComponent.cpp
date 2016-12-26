@@ -6,7 +6,7 @@
 
 void UTankMovementComponent::intendMoveForward(float controlThrow)
 {
-	if (leftTrack && rightTrack)
+	if (ensure(leftTrack && rightTrack))
 	{
 		//TODO fix double speed if stick and triggers used together
 		leftTrack->setThrottle(controlThrow);
@@ -16,11 +16,11 @@ void UTankMovementComponent::intendMoveForward(float controlThrow)
 
 void UTankMovementComponent::intendTurnRight(float controlThrow)
 {
-	if (leftTrack && rightTrack)
+	if (ensure(leftTrack && rightTrack))
 	{
 		leftTrack->setThrottle(controlThrow);
 		rightTrack->setThrottle(-controlThrow);
-		auto tankName = GetOwner()->GetName();
+		
 	}
 }
 

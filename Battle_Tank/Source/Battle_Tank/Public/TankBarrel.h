@@ -23,7 +23,4 @@ class BATTLE_TANK_API UTankBarrel : public UStaticMeshComponent
 		float minElevation = 0.0f;
 public:
 	void elevate(float);
-	
-	
-	
 };

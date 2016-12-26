@@ -5,7 +5,7 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
-class ATank;
+
 class UTankAimingCompnent;
 /**
  * 
@@ -16,15 +16,18 @@ class BATTLE_TANK_API ATankAIController : public AAIController
 	GENERATED_BODY()
 
 		UTankAimingCompnent* aim = nullptr;
-		ATank* controlledTank = nullptr;
-		ATank* playerTank = nullptr;
+		AActor* controlledTank = nullptr;
+		AActor* playerTank = nullptr;
 		virtual void BeginPlay()override;
 		virtual void Tick(float DeltaTime)override;
-		
-		UPROPERTY(EditDefaultsOnly,Category = "AI Control")
-			float acceptanceRadius = 300;
-		
 		void aimAtPlayer();
+
+	protected:
+
+		UPROPERTY(EditDefaultsOnly,Category = "AI Control")
+			float acceptanceRadius = 8000;
+		
+		
 		
 	
 };

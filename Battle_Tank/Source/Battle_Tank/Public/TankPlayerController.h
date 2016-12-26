@@ -9,7 +9,7 @@
 
 
 
-class ATank;
+//class ATank;
 class UTankAimingCompnent;
 /**
  * 
@@ -35,7 +35,7 @@ private:
 
 		bool getLookDirection(FVector2D , FVector & )const;
 		UTankAimingCompnent * aim;
-		ATank* owner;
+		AActor* owner;
 	
 protected:
 
@@ -51,7 +51,6 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
 		void aimingComponentFound(UTankAimingCompnent* aimReference);
 		
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-		ATank* GetControlledTank()const;
+
 	
 };

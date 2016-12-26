@@ -6,19 +6,55 @@
 
 
 
-void UTankTrack::setThrottle(float throttle)
+UTankTrack::UTankTrack()
+{
+	PrimaryComponentTick.bCanEverTick = false;
+	
+}
+
+void UTankTrack::BeginPlay()
+{
+	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
+}
+
+void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	
 
-	auto forceApplied = GetForwardVector()* throttle* trackMaxDrivingForce;
-	
-	auto tankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	//forceApplied.Z = 0;
+}
 
-	auto forceLocation = GetSocketLocation(FName("Hitch"));
-	auto tankRotation = tankRoot->GetComponentRotation();
-	tankRotation.Roll = FMath::Clamp<float>(tankRotation.Roll, -3.0f,3.0f);
-	tankRotation.Pitch = FMath::Clamp<float>(tankRotation.Pitch, -20.0f, 20.0f);;
-	tankRoot->SetWorldRotation(FQuat(tankRotation));
-	tankRoot->AddForceAtLocation(forceApplied,forceLocation);
+void UTankTrack::applySidewaysForce()
+{
+	// Work-out the required acceleration this frame to correct
+	auto SlippageSpeed = FMath::Clamp<float>(FVector::DotProduct(GetRightVector(), GetComponentVelocity()),-1,1);
+	auto DeltaTime = GetWorld()->GetDeltaSeconds();
+	auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
+
+	// Calculate and apply sideways (F = m a)
+	auto TankRoot = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
+	auto CorrectionForce = (TankRoot->GetMass() * CorrectionAcceleration) / 2; // Two tracks
+	TankRoot->AddForce(CorrectionForce);
+}
+
+void UTankTrack::setThrottle(float throttle)
+{
+	currentThrottle = FMath::Clamp<float>(currentThrottle + throttle,-1,1);
+}
+
+void UTankTrack::DriveTrack()
+{
+	auto ForceApplied = GetForwardVector() * currentThrottle * trackMaxDrivingForce;
+	UE_LOG(LogTemp,Warning,TEXT("Force Applied is: %f"), currentThrottle * trackMaxDrivingForce)
+	auto ForceLocation = GetComponentLocation();
+	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
+
+}
+
+void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	DriveTrack();
+	applySidewaysForce();
+	currentThrottle = 0;
+	
 }

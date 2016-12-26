@@ -3,7 +3,7 @@
 #include "Battle_Tank.h"
 #include "TankAIController.h"
 #include"TankAimingCompnent.h"
-#include "Tank.h"
+
 
 void ATankAIController::aimAtPlayer()
 {
@@ -13,20 +13,23 @@ void ATankAIController::aimAtPlayer()
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	controlledTank = Cast<ATank>(GetPawn());
+	controlledTank = GetPawn();
 	aim = controlledTank->FindComponentByClass<UTankAimingCompnent>();
-	playerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	playerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (aim)
+	
 		
-	if (controlledTank && playerTank)
+	if (ensure(controlledTank && playerTank&& aim))
 	{
 		
 		aimAtPlayer();
-		aim->fire();
+		if (aim->GetFiringState() == EFireingState::LOCKED)
+		{
+			aim->fire();
+		}
 		MoveToActor(playerTank, acceptanceRadius);
 	}
 }
